@@ -70,8 +70,9 @@ if data:
     print(f"Your current rate: ${current_rate:.5f} per kWh")
     print("Searching for cheaper rates...")
 
-    url = 'https://www.choosetexaspower.org/'
+    url = 'https://www.choosetexaspower.org/compare-offers/?zipCode=75212&m=moven'
     available_rates = scrape_rates(url)
+    print(available_rates)
     
     find_cheaper_rate(current_rate, available_rates)
 else:
