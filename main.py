@@ -41,9 +41,9 @@ def scrape_rates(url):
 
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     rates = []
-    
-    # Example: Find the rate elements. This part may need adjustments based on the actual HTML structure
-    for listing in soup.find_all('div', class_='rate-listing'):  # You may need to adjust the class name
+    print(soup)
+
+    for listing in soup.find_all('div', class_='rate-listing'):
         try:
             provider = listing.find('div', class_='provider-name').text.strip()  # Adjust the class name
             rate_text = listing.find('div', class_='rate').text.strip()  # Adjust the class name
