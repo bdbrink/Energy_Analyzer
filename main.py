@@ -1,12 +1,10 @@
 import pdfplumber
 import re
-import requests
-from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+from bs4 import BeautifulSoup
 
 def extract_energy_data(pdf_path):
     with pdfplumber.open(pdf_path) as pdf:
@@ -38,13 +36,17 @@ def scrape_rates(url):
     
     driver.get(url)
     
+    # Allow time for the JavaScript to render
+    driver.implicitly_wait(10)  # seconds
+
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     rates = []
     
-    for listing in soup.find_all('div', class_='rate-listing'):
+    # Example: Find the rate elements. This part may need adjustments based on the actual HTML structure
+    for listing in soup.find_all('div', class_='rate-listing'):  # You may need to adjust the class name
         try:
-            provider = listing.find('div', class_='provider-name').text.strip()
-            rate_text = listing.find('div', class_='rate').text.strip()
+            provider = listing.find('div', class_='provider-name').text.strip()  # Adjust the class name
+            rate_text = listing.find('div', class_='rate').text.strip()  # Adjust the class name
             rate = float(rate_text.replace('¢', '').replace('/kWh', ''))
             rates.append({"provider": provider, "rate": rate / 100})  # Convert cents to dollars
         except AttributeError:
@@ -70,9 +72,8 @@ if data:
     print(f"Your current rate: ${current_rate:.5f} per kWh")
     print("Searching for cheaper rates...")
 
-    url = 'https://www.choosetexaspower.org/compare-offers/?zipCode=75212&m=moven'
+    url = 'https://www.choosetexaspower.org/'
     available_rates = scrape_rates(url)
-    print(available_rates)
     
     find_cheaper_rate(current_rate, available_rates)
 else:
