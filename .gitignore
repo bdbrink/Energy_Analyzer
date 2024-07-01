@@ -1,0 +1,258 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environment
+.env/
+.venv/
+env/
+venv/
+ENV/
+
+# Pyre type checker
+.pyre/
+
+# pipenv
+pipenv.lock
+
+# Poetry
+poetry.lock
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow
+__pypackages__/
+
+# Celery task queue
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# PyCharm
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Pyre type checker
+.pyre/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# Jupyter Notebook
+.ipynb_checkpoints
+.profile/
+nbproject/
+
+# IPython
+.ipynb_checkpoints
+*.sqlite
+
+# pyenv
+.python-version
+
+# pipenv
+pipenv.lock
+
+# poetry
+poetry.lock
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# dotEnv
+.env
+
+# pyre type checker
+.pyre/
+
+# CI/CD tools
+circleci/
+.codecov.yml
+.coverage
+.tox/
+.nox/
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# IDE settings
+.vscode/
+.idea/
+*.code-workspace
+
+# Django stuff:
+*.log
+*.pot
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+.profile/
+
+# dotenv
+.env
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# pyenv
+.python-version
+
+# pytest
+.cache
+
+# pytype
+.pytype/
+
+# profiling
+*.prof
+
+# Tasks
+celerybeat-schedule
+celerybeat.pid
+.task-name
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# pytest
+.cache
+.pytest_cache/
+
+# Coverage
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Translations
+*.mo
+*.pot
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# Cython debug symbols
+cython_debug/
+
+# Anaconda
+anaconda-project/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# envfile
+.env.local
+.env.*.local
