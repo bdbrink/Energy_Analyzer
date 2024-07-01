@@ -5,21 +5,47 @@ async function scrapeRates(url) {
   const page = await browser.newPage();
   await page.goto(url, { waitUntil: 'networkidle2' });
 
+  // Adding debug information
+  console.log(`Navigated to ${url}`);
+
+  // Log the entire page content for debugging
+  const pageContent = await page.content();
+  console.log("Page content loaded");
+
+  // Save the page content to a file for offline inspection
+  const fs = require('fs');
+  fs.writeFileSync('page-content.html', pageContent);
+  console.log("Page content saved to page-content.html");
+
   // Adjust the selectors based on the website structure
   const rates = await page.evaluate(() => {
-    const listings = document.querySelectorAll('.rate-listing'); // Adjust selector
     const results = [];
+    const offers = document.querySelectorAll('.rate-card'); // Adjust selector
 
-    listings.forEach(listing => {
+    console.log(`Found ${offers.length} offers`);
+
+    offers.forEach((offer, index) => {
       try {
-        const provider = listing.querySelector('.provider-name').innerText.trim(); // Adjust selector
-        const rateText = listing.querySelector('.rate').innerText.trim(); // Adjust selector
-        const rate = parseFloat(rateText.replace('¢', '').replace('/kWh', '').trim()) / 100; // Convert to dollars
+        const providerElement = offer.querySelector('.provider-name'); // Adjust selector
+        const rateElement = offer.querySelector('.rate-amount'); // Adjust selector
 
-        results.push({ provider, rate });
+        // Debug: log the HTML content
+        console.log(`Offer ${index + 1} HTML:`, offer.innerHTML);
+
+        if (providerElement && rateElement) {
+          const provider = providerElement.innerText.trim();
+          const rateText = rateElement.innerText.trim();
+          const rate = parseFloat(rateText.replace('¢', '').replace('/kWh', '').trim()) / 100; // Convert to dollars
+
+          results.push({ provider, rate });
+
+          // Debug: log extracted data
+          console.log(`Offer ${index + 1} - Provider: ${provider}, Rate: $${rate.toFixed(5)} per kWh`);
+        } else {
+          console.error(`Offer ${index + 1} - Missing provider or rate element`);
+        }
       } catch (e) {
-        // Handle errors if any elements are missing
-        console.error('Error parsing listing:', e);
+        console.error(`Error parsing offer ${index + 1}:`, e);
       }
     });
 
@@ -30,23 +56,11 @@ async function scrapeRates(url) {
   return rates;
 }
 
-// Example usage
-const url = 'https://www.choosetexaspower.org/';
-scrapeRates(url).then(rates => {
-  console.log('Available rates:', rates);
-
-  // Replace this with the actual rate from your PDF
-  const currentRate = 0.14100;
-
-  const cheaperRates = rates.filter(rate => rate.rate < currentRate);
-  if (cheaperRates.length > 0) {
-    console.log('Cheaper rates found:');
-    cheaperRates.forEach(rate => {
-      console.log(`Provider: ${rate.provider}, Rate: $${rate.rate.toFixed(5)} per kWh`);
-    });
-  } else {
-    console.log('No cheaper rates found.');
-  }
-}).catch(error => {
-  console.error('Error:', error);
-});
+const url = 'https://www.choosetexaspower.org/compare-offers/?zipCode=75212&m=moven';
+scrapeRates(url)
+  .then(rates => {
+    console.log('Scraped rates:', JSON.stringify(rates, null, 2));
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
