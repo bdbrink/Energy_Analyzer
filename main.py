@@ -26,7 +26,7 @@ def extract_energy_data(pdf_path):
         return None
 
 def run_puppeteer_script():
-    result = subprocess.run(['node', 'scrape.js'], capture_output=True, text=True)
+    result = subprocess.run(['node', 'jsParser/scrape.js'], capture_output=True, text=True)
     return json.loads(result.stdout)
 
 def find_cheaper_rate(current_rate, available_rates):
@@ -37,7 +37,6 @@ def find_cheaper_rate(current_rate, available_rates):
     else:
         print("No cheaper rates found.")
 
-# Example usage
 pdf_path = 'energy_bill.pdf'
 data = extract_energy_data(pdf_path)
 
