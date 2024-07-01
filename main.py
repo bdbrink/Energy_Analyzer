@@ -1,10 +1,7 @@
 import pdfplumber
 import re
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-from bs4 import BeautifulSoup
+import subprocess
+import json
 
 def extract_energy_data(pdf_path):
     with pdfplumber.open(pdf_path) as pdf:
@@ -28,32 +25,9 @@ def extract_energy_data(pdf_path):
     else:
         return None
 
-def scrape_rates(url):
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--disable-gpu')
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    
-    driver.get(url)
-    
-    # Allow time for the JavaScript to render
-    driver.implicitly_wait(10)  # seconds
-
-    soup = BeautifulSoup(driver.page_source, 'html.parser')
-    rates = []
-    print(soup)
-
-    for listing in soup.find_all('div', class_='rate-listing'):
-        try:
-            provider = listing.find('div', class_='provider-name').text.strip()  # Adjust the class name
-            rate_text = listing.find('div', class_='rate').text.strip()  # Adjust the class name
-            rate = float(rate_text.replace('¢', '').replace('/kWh', ''))
-            rates.append({"provider": provider, "rate": rate / 100})  # Convert cents to dollars
-        except AttributeError:
-            continue
-    
-    driver.quit()
-    return rates
+def run_puppeteer_script():
+    result = subprocess.run(['node', 'scrape.js'], capture_output=True, text=True)
+    return json.loads(result.stdout)
 
 def find_cheaper_rate(current_rate, available_rates):
     cheaper_rates = [rate for rate in available_rates if rate["rate"] < current_rate]
@@ -72,8 +46,7 @@ if data:
     print(f"Your current rate: ${current_rate:.5f} per kWh")
     print("Searching for cheaper rates...")
 
-    url = 'https://www.choosetexaspower.org/'
-    available_rates = scrape_rates(url)
+    available_rates = run_puppeteer_script()
     
     find_cheaper_rate(current_rate, available_rates)
 else:
