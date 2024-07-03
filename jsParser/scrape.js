@@ -1,48 +1,35 @@
 const puppeteer = require('puppeteer');
 
 async function scrapeRates(url) {
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({ headless: false }); // Set to false for debugging
   const page = await browser.newPage();
   await page.goto(url, { waitUntil: 'networkidle2' });
 
-  // Adding debug information
   console.log(`Navigated to ${url}`);
 
-  // Log the entire page content for debugging
-  const pageContent = await page.content();
-  console.log("Page content loaded");
+  // Wait for the rate cards to load
+  await page.waitForSelector('.rate-card', { timeout: 10000 });
 
-  // Save the page content to a file for offline inspection
-  const fs = require('fs');
-  fs.writeFileSync('page-content.html', pageContent);
-  console.log("Page content saved to page-content.html");
-
-  // Adjust the selectors based on the website structure
   const rates = await page.evaluate(() => {
     const results = [];
-    const offers = document.querySelectorAll('.rate-card'); // Adjust selector
+    const offers = document.querySelectorAll('.rate-card');
 
     console.log(`Found ${offers.length} offers`);
 
     offers.forEach((offer, index) => {
       try {
-        const providerElement = offer.querySelector('.provider-name'); // Adjust selector
-        const rateElement = offer.querySelector('.rate-amount'); // Adjust selector
-
-        // Debug: log the HTML content
-        console.log(`Offer ${index + 1} HTML:`, offer.innerHTML);
+        const providerElement = offer.querySelector('.provider-name, .company-name');
+        const rateElement = offer.querySelector('.rate-amount, .price-amount');
 
         if (providerElement && rateElement) {
           const provider = providerElement.innerText.trim();
           const rateText = rateElement.innerText.trim();
-          const rate = parseFloat(rateText.replace('¢', '').replace('/kWh', '').trim()) / 100; // Convert to dollars
+          const rate = parseFloat(rateText.replace(/[^\d.]/g, '')) / 100; // Convert to dollars
 
           results.push({ provider, rate });
-
-          // Debug: log extracted data
           console.log(`Offer ${index + 1} - Provider: ${provider}, Rate: $${rate.toFixed(5)} per kWh`);
         } else {
-          console.error(`Offer ${index + 1} - Missing provider or rate element`);
+          console.log(`Offer ${index + 1} - Missing provider or rate element`);
         }
       } catch (e) {
         console.error(`Error parsing offer ${index + 1}:`, e);
